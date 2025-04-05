@@ -1,10 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-
+import {toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './index.css';
 
 function CitizenRegister() {
+  
   const [formData, setFormData] = useState({
     username: "",
     first_name: "",
@@ -12,8 +14,8 @@ function CitizenRegister() {
     email: "",
     password: "",
   });
-
-  const [responseMessage, setResponseMessage] = useState('');
+  const navigate = useNavigate(); 
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -21,41 +23,45 @@ function CitizenRegister() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    console.log('Form Data:', formData);
     try {
       const response = await axios.post('http://localhost:8000/api/user/citzen/signup/', formData);
-      setResponseMessage('Registration successful!');
+      
       console.log('Register Response:', response.data);
-       // Redirect to login page after successful registration
+      toast.success('Registration successful!'); // Show success message using toast
+
+      navigate('/login'); // Redirect to login page after successful registration
     } catch (error) {
         if (error.response && error.response.status === 400) {
           // Verificăm dacă serverul returnează eroarea pentru email duplicat
           if (error.response.data.error && error.response.data.error.includes('UNIQUE constraint failed: user_citzen.email')) {
-            setResponseMessage('An account with this email already exists.');
+            
+            toast.error('An account with this email already exists.'); 
           } 
           // Verificăm dacă serverul returnează eroarea pentru username duplicat
           else if (error.response.data.error && error.response.data.error.includes('UNIQUE constraint failed: user_citzen.username')) {
-            setResponseMessage('An account with this username already exists.');
+            
+            toast.error('An account with this username already exists.');
           } 
           else {
-            setResponseMessage('Registration failed. Please try again.');
+            
+            toast.error('Registration failed. Please try again.');
           }
         } else {
-          setResponseMessage('An unexpected error occurred. Please try again later.');
+          
+          toast.error('An unexpected error occurred. Please try again later.'); 
         }
         console.error('Register Error:', error.response?.data || error.message);
       }
   };
 
-  let message = null;
-    if (responseMessage) {
-        message = <p>{responseMessage}</p>;
-    }
+  
     return (
-    <div className="register-form">
+      <>
+    <div className="citzen-register-form">
       <h2>Citizen Registration</h2>
-      {message}
-      <form onSubmit={handleSubmit}>
+      
+      <form onSubmit={handleSubmit} >
         <div>
             <label htmlFor = "first_name">First Name:</label>
             <input type="text" id="first_name" name="first_name" value={formData.first_name} onChange={handleChange} required />
@@ -77,9 +83,11 @@ function CitizenRegister() {
           <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required />
         </div>
         <button type="submit">Register</button>
+        <p>Already have an account? <a href="/login">Login here</a></p>
       </form>
     </div>
-    
+    <p className="staff-redirect">Are you a staff member? Click here</p>
+    </>
     );
   };
 
