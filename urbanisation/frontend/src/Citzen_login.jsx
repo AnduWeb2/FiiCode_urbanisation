@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
-
+import './index.css';
+import 'react-toastify/dist/ReactToastify.css';
+import {toast} from 'react-toastify';
 
 function CitizenLogin() {
     const [formData, setFormData] = useState({
@@ -8,7 +10,6 @@ function CitizenLogin() {
         password: "",
     });
 
-    const [responseMessage, setResponseMessage] = useState('');
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -18,17 +19,17 @@ function CitizenLogin() {
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:8000/api/user/citzen/login/', formData);
-            setResponseMessage('Login successful!');
+            const response = await axios.post('http://localhost:8000/api/user/citizen/login/', formData);
+            toast.success('Login successful!'); 
             console.log('Login Response:', response.data);
 
             
             // Redirect to dashboard or home page after successful login
         } catch (error) {
-            if (error.response && error.response.status === 401) {
-                setResponseMessage('Invalid email or password.');
+            if (error.response && error.response.status === 401 || error.response.status === 404) {
+                toast.error('Invalid username or password. Please try again.');
             } else {
-                setResponseMessage('Login failed. Please try again.');
+                toast.error('Login failed. Please try again later.');
             }
             console.error('Login Error:', error.response?.data || error.message);
         }
@@ -37,7 +38,6 @@ function CitizenLogin() {
         <>
         <div className="login-form">
             <h2>Citizen Login</h2>
-            {responseMessage && <p>{responseMessage}</p>}
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="username">Username:</label>

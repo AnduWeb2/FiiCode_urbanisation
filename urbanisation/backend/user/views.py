@@ -4,7 +4,7 @@ from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from .models import StaffUser, Citzen, StaffUserToken, CitzenToken
 from files.views import getFile
-from django.contrib.auth.hashers import make_password, verify_password
+from django.contrib.auth.hashers import make_password, verify_password, check_password
 
 
 @csrf_exempt
@@ -66,7 +66,7 @@ def CitzenLogin(request):
         data = JSONParser().parse(request)
         try:
             user = Citzen.objects.get(username=data['username'])
-            if verify_password(data['password'], user.password):
+            if check_password(data['password'], user.password):
                 token = CitzenToken.objects.create(user=user, token=make_password(user.username))
                 token.save()
                 return JsonResponse({"token": token.token}, status=status.HTTP_200_OK)
