@@ -3,8 +3,11 @@ import axios from "axios";
 import './index.css';
 import 'react-toastify/dist/ReactToastify.css';
 import {toast} from 'react-toastify';
+import { useNavigate } from "react-router-dom";
+
 
 function CitizenLogin() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: "",
         password: "",
@@ -22,8 +25,8 @@ function CitizenLogin() {
             const response = await axios.post('http://localhost:8000/api/user/citizen/login/', formData);
             toast.success('Login successful!'); 
             console.log('Login Response:', response.data);
-
-            
+            localStorage.setItem('access_token', response.data.token);
+            navigate('/dashboard'); // Redirect to dashboard or home page after successful login
             // Redirect to dashboard or home page after successful login
         } catch (error) {
             if (error.response && error.response.status === 401 || error.response.status === 404) {

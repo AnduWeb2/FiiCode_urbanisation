@@ -15,7 +15,7 @@
 
 
 
-.citzen-register-form, .login-form {
+.citzen-register-form, .login-form,  .staff-register-form {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -24,7 +24,7 @@
   margin: 0;
 }
 
-.citzen-register-form form, .login-form form {
+.citzen-register-form form, .login-form form, .staff-register-form form {
   width: 100%;
   max-width: 500px;
   padding: 50px;
@@ -36,21 +36,21 @@
   color: black;
   text-align: left;
 }
-.citzen-register-form label, .login-form label {
+.citzen-register-form label, .login-form label, .staff-register-form label {
   display: block; 
   width: 100%; 
   font-weight: bold; 
   margin-bottom: 5px; 
 }
 
-.citzen-register-form input, .login-form input {
+.citzen-register-form input, .login-form input, .staff-register-form input {
   width: 100%; 
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box; 
 }
-.citzen-register-form button, .login-form button {
+.citzen-register-form button, .login-form button, .staff-register-form button {
   display: block; 
   margin: 20px auto; 
   padding: 10px 20px; 
@@ -63,10 +63,10 @@
   transition: background-color 0.3s ease; 
 }
 
-.citzen-register-form button:hover, .login-form button:hover {
+.citzen-register-form button:hover, .login-form button:hover, .staff-register-form button:hover {
   background-color: #1e3c72; 
 }
-.citzen-register-form p, .login-form p {
+.citzen-register-form p, .login-form p, .staff-register-form p {
   text-align: center;
   margin-top: 20px;
   font-size: 14px;

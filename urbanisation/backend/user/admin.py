@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Citzen, StaffUser, StaffUserToken, CitzenToken
+from .models import Citzen, StaffUser, StaffUserToken, CitzenToken,StaffUser
 
 # Register your models here.
 class CitzenAdmin(admin.ModelAdmin):
@@ -7,3 +7,4 @@ class CitzenAdmin(admin.ModelAdmin):
     search_fields = ('username', 'email')
 
 admin.site.register(Citzen, CitzenAdmin)
+admin.site.register(StaffUser)
