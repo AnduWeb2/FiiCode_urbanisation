@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  background: linear-gradient(to bottom, #2E55B6, #1E3C72);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -80,4 +80,72 @@
 }
 a {
   color: rgb(100, 1, 100);
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Ocupă întreaga înălțime a paginii */
+}
+.dashboard header {
+  background-color: #2E55B6;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+.dashboard main {
+  flex: 1; /* Ocupă spațiul rămas */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* Navbar */
+.navbar {
+  position: absolute; /* Poziționează navbar-ul absolut */
+  top: 0;
+  left: 0;
+  width: 100%; /* Ocupă întreaga lățime a paginii */
+
+  color: white;
+  padding: 10px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: flex-start; /* Aliniază elementele la stânga */
+  align-items: center;
+  gap: 20px; /* Spațiu între elemente */
+  z-index: 1000; /* Asigură-te că navbar-ul este deasupra altor elemente */
+}
+
+.navbar-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 15px; /* Spațiu între butoane */
+}
+
+.navbar-button, .navbar-button-logout {
+  padding: 8px 16px;
+  background-color: #64A8D3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.navbar-button:hover {
+  background: linear-gradient(135deg, #2575fc, #6a11cb); /* Inversare gradient */
+  transform: scale(1.05); /* Efect de hover */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Umbră mai pronunțată */
+}
+.navbar-button-logout:hover {
+  background-color: #FF4C4C; /* Fundal roșu pentru butonul de logout */
+  transform: scale(1.05); /* Efect de hover */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Umbră mai pronunțată */
 }

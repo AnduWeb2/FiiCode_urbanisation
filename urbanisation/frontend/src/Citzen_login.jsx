@@ -26,6 +26,7 @@ function CitizenLogin() {
             toast.success('Login successful!'); 
             console.log('Login Response:', response.data);
             localStorage.setItem('access_token', response.data.token);
+            localStorage.setItem('username', response.data.username); 
             navigate('/dashboard'); // Redirect to dashboard or home page after successful login
             // Redirect to dashboard or home page after successful login
         } catch (error) {

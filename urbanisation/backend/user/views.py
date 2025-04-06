@@ -43,7 +43,9 @@ def loginStaffUser(request):
             if verify_password(data['password'], user.password):
                 token = StaffUserToken.objects.create(user=user, token=make_password(user.username))
                 token.save()
-                return JsonResponse({"token": token.token}, status=status.HTTP_200_OK)
+                return JsonResponse({"token": token.token,
+                                     "username": user.username
+                }, status=status.HTTP_200_OK)
             else:
                 return JsonResponse({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
         except StaffUser.DoesNotExist:
@@ -77,7 +79,7 @@ def CitzenLogin(request):
             if check_password(data['password'], user.password):
                 token = CitzenToken.objects.create(user=user, token=make_password(user.username))
                 token.save()
-                return JsonResponse({"token": token.token}, status=status.HTTP_200_OK)
+                return JsonResponse({"token": token.token, "username": user.username}, status=status.HTTP_200_OK)
             else:
                 return JsonResponse({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
         except Citzen.DoesNotExist:
