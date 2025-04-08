@@ -98,6 +98,9 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  gap: 30px; /* Spațiu între elemente */
+  padding: 20px;
 }
 /* Navbar */
 .navbar {
@@ -148,4 +151,80 @@ a {
   background-color: #FF4C4C; /* Fundal roșu pentru butonul de logout */
   transform: scale(1.05); /* Efect de hover */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Umbră mai pronunțată */
+}
+.search-bar-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto;
+  
+}
+
+.search-bar {
+  width: 100%;
+  padding: 12px 20px;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  font-size: 16px;
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease;
+}
+
+.search-bar:focus {
+  border-color: #2E55B6;
+}
+
+/* Search Results */
+.search-results {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2000;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.search-results ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.search-result-item:hover {
+  background-color: #f0f0f0;
+}
+
+.route-number {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  background-color: #2E55B6;
+  color: white;
+  font-weight: bold;
+  border-radius: 50%;
+  font-size: 14px;
+}
+
+.route-name {
+  flex: 1;
+  color: #333;
 }
