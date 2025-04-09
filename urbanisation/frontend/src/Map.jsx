@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { MapContainer, TileLayer } from "react-leaflet";
-import { routes } from "./Api_data.jsx";
+import { MapContainer, TileLayer, Marker, Polyline, Popup } from "react-leaflet";
+import { routes, trips, stops, stop_times } from "./Api_data.jsx";
 import "leaflet/dist/leaflet.css";
 import "./index.css";
 
@@ -10,6 +10,8 @@ function Map() {
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredRoutes, setFilteredRoutes] = useState(routes);
     const [showResults, setShowResults] = useState(false);
+    const [stopsDetails, setStopsDetails] = useState([]);
+    const [color, setColor] = useState("#000000");
 
     const handleSearch = (e) => {
         const term = e.target.value.toLowerCase();
@@ -34,6 +36,38 @@ function Map() {
         };
     }, []);
 
+    const handleRouteClick = (routeID) => {
+        const trip = trips.find((trip) => trip.route_id === routeID && trip.direction_id === 0);
+        let stopSeq = 0;
+        let stopIDs = [];
+        let stopid = stop_times.find((stop) => stop.trip_id === trip.trip_id && stop.stop_sequence === stopSeq);
+        stopIDs.push(stopid.stop_id);
+        stopSeq++;
+        while (stopid) {
+            stopid = stop_times.find((stop) => stop.trip_id === trip.trip_id && stop.stop_sequence === stopSeq);
+            if (stopid) {
+                stopIDs.push(stopid.stop_id);
+                stopSeq++;
+            }
+        }
+        let stops_details = [];
+        for (let i = 0; i < stopIDs.length; i++) {
+            const stop = stops.find((stop) => stop.stop_id === stopIDs[i]);
+            stops_details.push({
+                stop_name: stop.stop_name,
+                lat: stop.stop_lat,
+                lon: stop.stop_lon,
+            });
+        setColor(routes[routeID].route_color);
+        }
+        setStopsDetails(stops_details);
+        console.log("Route clicked:", routes[routeID].route_long_name);
+        console.log("Trip:", trip);
+        console.log("Stops", stops_details);
+        console.log("Color", color);
+        setShowResults(false);
+    }
+
     return (
         <>
             <div className="search-bar-container" ref={searchBarRef}>
@@ -42,14 +76,15 @@ function Map() {
                     placeholder="Search for routes..."
                     value={searchTerm}
                     onChange={handleSearch}
+                    onFocus={() => setShowResults(true)}
                     className="search-bar"
                 />
-                {showResults && filteredRoutes.length > 0 && (
+                {showResults  && (
                     <div className="search-results">
                         <ul>
                             {filteredRoutes.map((route, index) => (
-                                <li key={index} className="search-result-item">
-                                    <span className="route-number">{route.route_id}</span>
+                                <li key={index} className="search-result-item" onClick={() => handleRouteClick(route.route_id)}>
+                                    <span className="route-number" style={{ backgroundColor: route.route_color }}>{route.route_id}</span>
                                     <span className="route-name">{route.route_long_name}</span>
                                 </li>
                             ))}
@@ -69,6 +104,18 @@ function Map() {
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     />
+                    {stopsDetails.map((stop, index) => (
+                        <Marker key={index} position={[stop.lat, stop.lon]}>
+                            <Popup>{stop.stop_name}</Popup>
+                        </Marker>
+                    ))}
+                    {stopsDetails.length > 1 && (
+                        <Polyline
+                            positions={stopsDetails.map((stop) => [stop.lat, stop.lon])}
+                            color={color}
+                            weight={5}
+                        />
+                    )}
                 </MapContainer>
             </div>
         </>
