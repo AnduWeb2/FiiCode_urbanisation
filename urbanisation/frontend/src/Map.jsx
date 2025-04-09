@@ -3,6 +3,8 @@ import { MapContainer, TileLayer, Marker, Polyline, Popup } from "react-leaflet"
 import { routes, trips, stops, stop_times } from "./Api_data.jsx";
 import "leaflet/dist/leaflet.css";
 import "./index.css";
+import Routing from "./Routing.jsx";
+
 
 function Map() {
     const mapRef = useRef(null);
@@ -12,6 +14,7 @@ function Map() {
     const [showResults, setShowResults] = useState(false);
     const [stopsDetails, setStopsDetails] = useState([]);
     const [color, setColor] = useState("#000000");
+    const [showPolyline, setShowPolyline] = useState(false);
 
     const handleSearch = (e) => {
         const term = e.target.value.toLowerCase();
@@ -37,6 +40,7 @@ function Map() {
     }, []);
 
     const handleRouteClick = (routeID) => {
+        const route1 = routes.find((route) => route.route_id === routeID);
         const trip = trips.find((trip) => trip.route_id === routeID && trip.direction_id === 0);
         let stopSeq = 0;
         let stopIDs = [];
@@ -51,6 +55,7 @@ function Map() {
             }
         }
         let stops_details = [];
+        setShowPolyline(false);
         for (let i = 0; i < stopIDs.length; i++) {
             const stop = stops.find((stop) => stop.stop_id === stopIDs[i]);
             stops_details.push({
@@ -58,10 +63,11 @@ function Map() {
                 lat: stop.stop_lat,
                 lon: stop.stop_lon,
             });
-        setColor(routes[routeID].route_color);
+            setColor(route1.route_color);
         }
+        setTimeout(() => setShowPolyline(true), 10);
         setStopsDetails(stops_details);
-        console.log("Route clicked:", routes[routeID].route_long_name);
+        console.log("Route clicked:", route1.route_long_name);
         console.log("Trip:", trip);
         console.log("Stops", stops_details);
         console.log("Color", color);
@@ -109,12 +115,9 @@ function Map() {
                             <Popup>{stop.stop_name}</Popup>
                         </Marker>
                     ))}
-                    {stopsDetails.length > 1 && (
-                        <Polyline
-                            positions={stopsDetails.map((stop) => [stop.lat, stop.lon])}
-                            color={color}
-                            weight={5}
-                        />
+                    {stopsDetails.length > 1 && showPolyline===true && (
+                        <Routing points={stopsDetails.map((stop) => [stop.lat, stop.lon])} color={color} />
+                        
                     )}
                 </MapContainer>
             </div>
