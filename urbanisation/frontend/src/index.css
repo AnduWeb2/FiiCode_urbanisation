@@ -99,7 +99,7 @@ a {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 30px; /* Spațiu între elemente */
+  gap: 0px; /* Spațiu între elemente */
   padding: 20px;
 }
 /* Navbar */
@@ -226,4 +226,9 @@ a {
 .route-name {
   flex: 1;
   color: #333;
+}
+.routes-searched {
+  align-self: flex-start;
+  margin-right: auto;
+  width: fit-content;
 }

@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import { MapContainer, TileLayer, Marker, Polyline, Popup } from "react-leaflet";
 import { routes, trips, stops, stop_times } from "./Api_data.jsx";
 import "leaflet/dist/leaflet.css";
 import "./index.css";
 import Routing from "./Routing.jsx";
+import L from "leaflet";
 
 
 function Map() {
@@ -15,6 +16,11 @@ function Map() {
     const [stopsDetails, setStopsDetails] = useState([]);
     const [color, setColor] = useState("#000000");
     const [showPolyline, setShowPolyline] = useState(false);
+    const [vehicles, setVehicles] = useState([]);
+    const [selectedRouteId, setSelectedRouteId] = useState(null);
+    const [selectedRouteName, setSelectedRouteName] = useState(null);
+    const [lastSelectedRouteName, setLastSelectedRouteName] = useState(null);
+
 
     const handleSearch = (e) => {
         const term = e.target.value.toLowerCase();
@@ -33,6 +39,27 @@ function Map() {
     };
 
     useEffect(() => {
+        const fetchVehicles = async () => {
+            try {
+                const response = await fetch("https://api.tranzy.ai/v1/opendata/vehicles", {
+                    method: "GET",
+                    headers: {
+                        Accept : 'application/json',
+                        "X-API-KEY": "zWcIwy0GwOJVTHfBNNo23oZedgU5fG14drJE0cPp",
+                        "X-Agency-Id": "1",
+                    },                              
+                });
+                const data = await response.json();
+                setVehicles(data);
+                console.log("Vehicles:", data);
+            } catch (error) {
+                console.error("Error fetching vehicles:", error);
+            }
+        };
+        fetchVehicles();
+    }, []);
+
+    useEffect(() => {
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
@@ -40,7 +67,11 @@ function Map() {
     }, []);
 
     const handleRouteClick = (routeID) => {
+        setSelectedRouteId(routeID);
+
         const route1 = routes.find((route) => route.route_id === routeID);
+        setLastSelectedRouteName(selectedRouteName);
+        setSelectedRouteName(route1.route_long_name);
         const trip = trips.find((trip) => trip.route_id === routeID && trip.direction_id === 0);
         let stopSeq = 0;
         let stopIDs = [];
@@ -71,6 +102,7 @@ function Map() {
         console.log("Trip:", trip);
         console.log("Stops", stops_details);
         console.log("Color", color);
+        console.log( "Transmit: ",stopsDetails.map((stop) => [stop.lat, stop.lon]))
         setShowResults(false);
     }
 
@@ -98,25 +130,77 @@ function Map() {
                     </div>
                 )}
             </div>
-
+            <div className="routes-searched">
+                <h3>Selected Route: <strong>{selectedRouteName || "None"}</strong></h3>
+                <h4>Last Selected Route: {lastSelectedRouteName || "None"}</h4>
+            </div>
             <div style={{ height: "50vh", width: "50vw" }} className="map-container">
                 <MapContainer
                     center={[47.1585, 27.6014]}
                     zoom={13}
-                    ref={mapRef}
+                    whenCreated={(mapInstance) => {
+                        mapRef.current = mapInstance;
+
+                    }}
                     style={{ height: "50vh", width: "50vw" }}
                 >
                     <TileLayer
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     />
-                    {stopsDetails.map((stop, index) => (
-                        <Marker key={index} position={[stop.lat, stop.lon]}>
-                            <Popup>{stop.stop_name}</Popup>
-                        </Marker>
-                    ))}
+                    {stopsDetails.map((stop, index) => {
+                       if (!stop.lat || !stop.lon) {
+                        console.warn(`Stop ${stop.stop_name} has invalid coordinates.`);
+                        return null; // Ignoră stopurile fără coordonate valide
+                    }
+                        const isFirst = index === 0;
+                        const isLast = index === stopsDetails.length - 1;
+
+                        return (
+                            <Marker
+                                key={index}
+                                position={[stop.lat, stop.lon]}
+                                icon={L.icon({
+                                    iconUrl: isFirst
+                                        ? "/media/test.png" 
+                                        : isLast
+                                        ? "/media/test.png" 
+                                        : "/media/default.png", 
+                                    iconSize: isFirst || isLast ? [32, 32] : [16, 16], 
+                                    iconAnchor: isFirst || isLast ? [16, 32] : [8, 16],
+                                })}
+                            >
+                                <Popup>{stop.stop_name}</Popup>
+                            </Marker>
+
+                        );
+                    })}
+                    {selectedRouteId && vehicles
+                        .filter((vehicle) => vehicle.route_id === selectedRouteId && vehicle.trip_id!=null) // Filtrează vehiculele
+                        .map((vehicle, index) => {
+                            if (!vehicle.latitude || !vehicle.longitude) {
+                                console.warn(`Vehicle ${vehicle.id} has invalid coordinates.`);
+                                return null; // Ignoră vehiculele fără coordonate valide
+                            }
+                            const vehiclePosition = [vehicle.latitude, vehicle.longitude];
+                            const tripHeadsign = trips.find((trip) => trip.trip_id === vehicle.trip_id)?.trip_headsign || "Unknown";
+                            return (
+                                <Marker
+                                    key={index}
+                                    position={vehiclePosition}
+                                    icon={L.icon({
+                                        iconUrl: "/media/bus2.png",
+                                        iconSize: [32, 32],
+                                        iconAnchor: [16, 32],
+                                    })}
+                                >   
+                                    <Popup>Speed: {vehicle.speed} km/h<br />Id: {vehicle.id}<br />Catre: <strong>{tripHeadsign}</strong></Popup>
+                                </Marker>
+                            );
+                        })}
+                    
                     {stopsDetails.length > 1 && showPolyline===true && (
-                        <Routing points={stopsDetails.map((stop) => [stop.lat, stop.lon])} color={color} />
+                        <Routing points={stopsDetails} color={color} />
                         
                     )}
                 </MapContainer>
