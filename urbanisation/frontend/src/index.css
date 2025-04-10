@@ -227,8 +227,31 @@ a {
   flex: 1;
   color: #333;
 }
-.routes-searched {
+.route-info {
   align-self: flex-start;
   margin-right: auto;
   width: fit-content;
+  display: flex;
+  gap: 100px;
+}
+.route-info button{
+  width: auto;
+  height: auto;
+  flex: none;
+  align-self: flex-start;
+  margin-top: 15px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #FFC107, #E0A106);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.6s ease, transform 0.3s ease;
+}
+.route-info button:hover {
+  background: linear-gradient(135deg, #FFC107, #FFB300); /* Inversare gradient */
+  transform: scale(1.05); /* Efect de hover */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Umbră mai pronunțată */
 }

@@ -32,13 +32,13 @@ function Map() {
         setShowResults(true);
     };
 
-    const handleClickOutside = (e) => {
+    const handleClickOutside = (e) => { // Cand dam clikc pe afara sa se inchida lista de rezultate
         if (searchBarRef.current && !searchBarRef.current.contains(e.target)) {
             setShowResults(false);
         }
     };
 
-    useEffect(() => {
+    useEffect(() => { //Obtinem vehiculele pentru rute
         const fetchVehicles = async () => {
             try {
                 const response = await fetch("https://api.tranzy.ai/v1/opendata/vehicles", {
@@ -59,19 +59,54 @@ function Map() {
         fetchVehicles();
     }, []);
 
-    useEffect(() => {
+    useEffect(() => { //Pentru a inchide lista de rezultate cand se da click in afara
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
 
+    useEffect(() => { //Salvam ultima ruta selectata in local storage
+        const lastSelectedRouteId = localStorage.getItem("SelectedRouteId1");
+        const lastSelectedRouteName = localStorage.getItem("SelectedRoute");
+        const savedStopsDetails = localStorage.getItem("StopsDetails");
+        const color = localStorage.getItem("Color");
+        console.log("Restoring from localStorage:");
+        console.log("lastSelectedRouteId:", lastSelectedRouteId);
+        console.log("lastSelectedRouteName:", lastSelectedRouteName);
+        console.log("savedStopsDetails:", savedStopsDetails);
+
+        if (lastSelectedRouteId && lastSelectedRouteName && savedStopsDetails) { 
+            setSelectedRouteName(lastSelectedRouteName);
+            setSelectedRouteId(lastSelectedRouteId);
+            setStopsDetails(JSON.parse(savedStopsDetails));
+            const route = routes.find((route) => route.route_id === lastSelectedRouteId);
+            if (route) {
+                setColor(color);
+                setSearchTerm(route.route_long_name); // Set the search term to the last selected route name
+            }
+        }
+    }, []);
+    
+    useEffect(() => {
+        console.log("Stops Details after restoration:", stopsDetails);
+    }, [stopsDetails]);
+
     const handleRouteClick = (routeID) => {
+        if (!routeID) {
+            console.warn("Invalid route ID:", routeID);
+            return;
+        }
         setSelectedRouteId(routeID);
 
         const route1 = routes.find((route) => route.route_id === routeID);
-        setLastSelectedRouteName(selectedRouteName);
+        if (selectedRouteName) {
+            localStorage.setItem("lastSelectedRoute", selectedRouteName);
+            setLastSelectedRouteName(selectedRouteName);
+        }
         setSelectedRouteName(route1.route_long_name);
+        localStorage.setItem("SelectedRoute", route1.route_long_name);
+        localStorage.setItem("SelectedRouteId1", routeID);
         const trip = trips.find((trip) => trip.route_id === routeID && trip.direction_id === 0);
         let stopSeq = 0;
         let stopIDs = [];
@@ -94,10 +129,12 @@ function Map() {
                 lat: stop.stop_lat,
                 lon: stop.stop_lon,
             });
-            setColor(route1.route_color);
         }
+        setColor(route1.route_color);
         setTimeout(() => setShowPolyline(true), 10);
         setStopsDetails(stops_details);
+        localStorage.setItem("StopsDetails", JSON.stringify(stops_details));
+        localStorage.setItem("Color", route1.route_color);
         console.log("Route clicked:", route1.route_long_name);
         console.log("Trip:", trip);
         console.log("Stops", stops_details);
@@ -130,9 +167,12 @@ function Map() {
                     </div>
                 )}
             </div>
-            <div className="routes-searched">
-                <h3>Selected Route: <strong>{selectedRouteName || "None"}</strong></h3>
-                <h4>Last Selected Route: {lastSelectedRouteName || "None"}</h4>
+            <div className="route-info">
+                <div className="routes-searched">
+                    <h3>Selected Route: <strong>{selectedRouteName || "None"}</strong></h3>
+                    <h4>Last Selected Route: {lastSelectedRouteName || "None"}</h4>
+                </div>
+                <button>Add selected route to favorites</button>
             </div>
             <div style={{ height: "50vh", width: "50vw" }} className="map-container">
                 <MapContainer
@@ -200,7 +240,7 @@ function Map() {
                         })}
                     
                     {stopsDetails.length > 1 && showPolyline===true && (
-                        <Routing points={stopsDetails} color={color} />
+                        <Routing points={stopsDetails} color={color || "blue"} />
                         
                     )}
                 </MapContainer>
