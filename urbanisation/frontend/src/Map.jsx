@@ -5,6 +5,7 @@ import "leaflet/dist/leaflet.css";
 import "./index.css";
 import Routing from "./Routing.jsx";
 import L from "leaflet";
+import axios from "axios";
 
 
 function Map() {
@@ -18,9 +19,13 @@ function Map() {
     const [showPolyline, setShowPolyline] = useState(false);
     const [vehicles, setVehicles] = useState([]);
     const [selectedRouteId, setSelectedRouteId] = useState(null);
-    const [selectedRouteName, setSelectedRouteName] = useState(null);
-    const [lastSelectedRouteName, setLastSelectedRouteName] = useState(null);
-
+    const [selectedRouteName, setSelectedRouteName] = useState("");
+    const [lastSelectedRouteName, setLastSelectedRouteName] = useState("");
+    const [routeFavorite, setRouteFavorite] = useState({
+        route_id: null,
+        route_name: "",
+        token: "",
+    });
 
     const handleSearch = (e) => {
         const term = e.target.value.toLowerCase();
@@ -67,30 +72,22 @@ function Map() {
     }, []);
 
     useEffect(() => { //Salvam ultima ruta selectata in local storage
-        const lastSelectedRouteId = localStorage.getItem("SelectedRouteId1");
-        const lastSelectedRouteName = localStorage.getItem("SelectedRoute");
-        const savedStopsDetails = localStorage.getItem("StopsDetails");
-        const color = localStorage.getItem("Color");
-        console.log("Restoring from localStorage:");
-        console.log("lastSelectedRouteId:", lastSelectedRouteId);
-        console.log("lastSelectedRouteName:", lastSelectedRouteName);
-        console.log("savedStopsDetails:", savedStopsDetails);
-
-        if (lastSelectedRouteId && lastSelectedRouteName && savedStopsDetails) { 
-            setSelectedRouteName(lastSelectedRouteName);
-            setSelectedRouteId(lastSelectedRouteId);
-            setStopsDetails(JSON.parse(savedStopsDetails));
-            const route = routes.find((route) => route.route_id === lastSelectedRouteId);
-            if (route) {
-                setColor(color);
-                setSearchTerm(route.route_long_name); // Set the search term to the last selected route name
-            }
+        const lastSelectedRouteName1 = localStorage.getItem("lastSelectedRouteName");
+        const lastSelectedRouteId1 = localStorage.getItem("lastSelectedRouteId");
+        const lastSelectedRouteId1Int = parseInt(lastSelectedRouteId1, 10);
+        console.log("Restoring from localStorage:", {
+            lastSelectedRouteName1,
+            lastSelectedRouteId1Int,
+        });
+        if (lastSelectedRouteName1 && lastSelectedRouteId1Int)
+        {
+            handleRouteClick(lastSelectedRouteId1Int);
+            setSearchTerm(lastSelectedRouteName1);
         }
+        
     }, []);
     
-    useEffect(() => {
-        console.log("Stops Details after restoration:", stopsDetails);
-    }, [stopsDetails]);
+    
 
     const handleRouteClick = (routeID) => {
         if (!routeID) {
@@ -100,13 +97,11 @@ function Map() {
         setSelectedRouteId(routeID);
 
         const route1 = routes.find((route) => route.route_id === routeID);
-        if (selectedRouteName) {
-            localStorage.setItem("lastSelectedRoute", selectedRouteName);
-            setLastSelectedRouteName(selectedRouteName);
-        }
+        setLastSelectedRouteName(selectedRouteName);
         setSelectedRouteName(route1.route_long_name);
-        localStorage.setItem("SelectedRoute", route1.route_long_name);
-        localStorage.setItem("SelectedRouteId1", routeID);
+        setSearchTerm(route1.route_long_name);
+        localStorage.setItem("lastSelectedRouteName", route1.route_long_name);
+        localStorage.setItem("lastSelectedRouteId", routeID);
         const trip = trips.find((trip) => trip.route_id === routeID && trip.direction_id === 0);
         let stopSeq = 0;
         let stopIDs = [];
@@ -133,8 +128,7 @@ function Map() {
         setColor(route1.route_color);
         setTimeout(() => setShowPolyline(true), 10);
         setStopsDetails(stops_details);
-        localStorage.setItem("StopsDetails", JSON.stringify(stops_details));
-        localStorage.setItem("Color", route1.route_color);
+        
         console.log("Route clicked:", route1.route_long_name);
         console.log("Trip:", trip);
         console.log("Stops", stops_details);
@@ -142,6 +136,39 @@ function Map() {
         console.log( "Transmit: ",stopsDetails.map((stop) => [stop.lat, stop.lon]))
         setShowResults(false);
     }
+    const addRouteToFavorites = async () => {
+        const token = localStorage.getItem("access_token");
+        if (!token) {
+            console.error("No token found in local storage.");
+            return;
+        }
+        if (!selectedRouteId || !selectedRouteName) {
+            console.error("Route ID or name is missing.");
+            return;
+        }
+        setRouteFavorite({
+            route_id: selectedRouteId,
+            route_name: selectedRouteName,
+            token: token,
+        });
+        try {
+            const response = await axios.post("http://localhost:8000/api/routes/add-favorite/", {
+                route_id: selectedRouteId,
+                route_name: selectedRouteName,
+                token: token,
+            });
+            if (response.status === 201) {
+                console.log("Route added to favorites:");
+            } else {
+                console.error("Failed to add route to favorites:");
+            }
+        } catch (error) {
+            console.error("Error adding route to favorites:", error);
+        }
+
+    };
+
+    
 
     return (
         <>
@@ -172,7 +199,7 @@ function Map() {
                     <h3>Selected Route: <strong>{selectedRouteName || "None"}</strong></h3>
                     <h4>Last Selected Route: {lastSelectedRouteName || "None"}</h4>
                 </div>
-                <button>Add selected route to favorites</button>
+                <button onClick={addRouteToFavorites}>Add selected route to favorites</button>
             </div>
             <div style={{ height: "50vh", width: "50vw" }} className="map-container">
                 <MapContainer
