@@ -6,6 +6,8 @@ import "./index.css";
 import Routing from "./Routing.jsx";
 import L from "leaflet";
 import axios from "axios";
+import 'react-toastify/dist/ReactToastify.css';
+import {toast} from 'react-toastify';
 
 
 function Map() {
@@ -158,12 +160,22 @@ function Map() {
                 token: token,
             });
             if (response.status === 201) {
-                console.log("Route added to favorites:");
-            } else {
-                console.error("Failed to add route to favorites:");
+                toast.success("Route added to favorites!");
+                console.log("Route added to favorites:", response.data);
+            }
+            else {
+                toast.error("Failed to add route to favorites.");
+                console.log("Failed to add route to favorites:", response.data);
             }
         } catch (error) {
-            console.error("Error adding route to favorites:", error);
+            if (error.response && error.response.status === 408) {
+                toast.error("Route already exists in favorites.");
+                console.log("Route already exists in favorites:", error.response.data);
+            }
+            else{
+                toast.error("Error adding route to favorites.");
+                console.error("Error adding route to favorites:", error);
+            }
         }
 
     };

@@ -130,7 +130,7 @@ a {
   gap: 15px; /* Spațiu între butoane */
 }
 
-.navbar-button, .navbar-button-logout {
+.navbar-button, .navbar-button-logout, .navbar-button-favRoutes {
   padding: 8px 16px;
   background-color: #64A8D3;
   color: white;
@@ -251,7 +251,42 @@ a {
   transition: background-color 0.6s ease, transform 0.3s ease;
 }
 .route-info button:hover {
-  background: linear-gradient(135deg, #FFC107, #FFB300); /* Inversare gradient */
-  transform: scale(1.05); /* Efect de hover */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Umbră mai pronunțată */
+  background: linear-gradient(135deg, #FFC107, #FFB300); 
+  transform: scale(1.05); 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
+}
+.navbar-button-favRoutes:hover {
+  background: linear-gradient(135deg, #FFC107, #FFB300); 
+  transform: scale(1.05); 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
+}
+
+.favorite-routes-p {
+  display: inline-block;
+}
+.favorite-routes-button {
+  display: inline-block;
+  margin-left: 20px;
+  
+}
+.favorite-routes {
+  position: absolute;
+  top: 200px;
+  left: 20px;
+}
+.favorite-routes-button {
+  padding: 8px 16px;
+  background-color: #d32c02;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.favorite-routes-button:hover {
+  background-color: #FF4C4C; 
+  transform: scale(1.05); 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
 }
