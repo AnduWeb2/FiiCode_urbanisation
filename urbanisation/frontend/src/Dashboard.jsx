@@ -82,12 +82,15 @@ function Dashboard() {
         }
     }
     const handleHomeClick = () => {
+        navigate("/dashboard");
         setShowMap(true);
     }
     const toggleDropdown = () => {
         setDropdownOpen(!dropdownOpen);
     }
-
+    const handleRouteReportClick = () => {
+        navigate("/report-route");
+    }
     return (
         <div className="dashboard">
             <header>
@@ -101,7 +104,7 @@ function Dashboard() {
                     <button className="navbar-button">
                         Profile Settings
                     </button>
-                    <button className="navbar-button-logout">
+                    <button className="navbar-button-logout" onClick={handleRouteReportClick}>
                         Report Route
                     </button>
                     <button onClick={handleLogout} className="navbar-button-logout">

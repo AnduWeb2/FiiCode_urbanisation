@@ -4,7 +4,7 @@ from user.models import Citzen
 # Create your models here.
 
 class FavoriteRoute(models.Model):
-    route_id = models.CharField(max_length=255, unique=True)
+    route_id = models.IntegerField()
     route_name = models.CharField(max_length=255)
     user = models.ForeignKey(Citzen, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
