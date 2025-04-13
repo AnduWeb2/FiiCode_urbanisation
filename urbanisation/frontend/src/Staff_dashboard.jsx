@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Map from "./Map";
 
 function StaffDashboard() {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ function StaffDashboard() {
   const [reports, setReports] = useState([]); // Lista de rapoarte
   const [viewDetails, setViewDetails] = useState(false); // Controlează afișarea detaliilor
   const [selectedReport, setSelectedReport] = useState(null); // Raportul selectat
-
+  const [viewMap, setViewMap] = useState(false)
   useEffect(() => {
     const token = localStorage.getItem("access_token");
     if (!token) {
@@ -51,11 +52,24 @@ function StaffDashboard() {
     setViewDetails(false); // Revino la lista de rapoarte
     setSelectedReport(null); // Resetează raportul selectat
   };
+  const handleHome = () => {
+    navigate("/staff-dashboard")
+    setViewMap(false)
 
+  }
+  const handleMap = () => {
+    setViewMap(true)
+    setViewDetails(false)
+  }
   return (
     <div className="staff-dashboard">
       <header className="staff-header">
         <nav className="navbar-links">
+          {viewMap ? (
+            <button className="navbar-button" onClick={handleHome}>Home</button>
+          ) :
+            <button className="navbar-button" onClick={handleMap}>Map</button>
+        }
           <button onClick={handleLogout} className="navbar-button-logout">
             Logout
           </button>
@@ -64,6 +78,9 @@ function StaffDashboard() {
         <p>Hello, {username}! Welcome to the Staff Dashboard</p>
       </header>
       <main className="staff-dashboard-main">
+        {viewMap && 
+          <Map />
+        }
         {viewDetails ? (
           <ReportDetails
             report={selectedReport}
