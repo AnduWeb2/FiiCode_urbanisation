@@ -5,8 +5,10 @@ import { useState } from "react";
 import Map from "./Map";
 import axios from "axios";
 import { toast } from "react-toastify";
+import PointsShop from "./PointsShop";
 
-function Dashboard() {
+
+function Dashboard({showPointsShop}) {
     const navigate = useNavigate();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [username, setUsername] = useState("");
@@ -21,11 +23,13 @@ function Dashboard() {
         } else {
             setUsername(localStorage.getItem("username"));
             fetchUserPoints();
+            localStorage.setItem("points", userPoints)
         }
     }, [navigate]);
     const handleLogout = () => {
         localStorage.removeItem("access_token");
         localStorage.removeItem("username");
+        localStorage.removeItem("points");
         navigate("/login");
     }
     const handleFavoriteRoutesClick = async () => {
@@ -114,12 +118,12 @@ function Dashboard() {
             <header>
                 <nav className="navbar-links">
                     <button className="navbar-button" onClick={handleHomeClick}>
-                        Home
+                        Map
                     </button>
                     <button className="navbar-button-favRoutes" onClick={handleFavoriteRoutesClick}>
                         Favorite Routes
                     </button>
-                    <button className="navbar-button-shop">
+                    <button className="navbar-button-shop" onClick={() => navigate("/points-shop")}>
                         Points Shop
                     </button>
                     <button className="navbar-button-logout" onClick={handleRouteReportClick}>
@@ -137,7 +141,9 @@ function Dashboard() {
                 
             </header>
             <main>
-                {showMap ? (
+                {showPointsShop ? (
+                    <PointsShop />
+                ) : showMap ? (
                     <Map fetchUserPoints={fetchUserPoints} />
                 ) : (
                     <div className="favorite-routes">

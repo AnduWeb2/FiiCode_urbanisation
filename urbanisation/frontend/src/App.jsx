@@ -8,6 +8,7 @@ import StaffLogin from './Staff_login.jsx'
 import Dashboard from './Dashboard.jsx'
 import RouteReport from './Report_route.jsx'
 import StaffDashboard from './Staff_dashboard.jsx'
+import Home from './Home.jsx'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -23,8 +24,9 @@ function App() {
           <Route path="/register" element={<CitzenRegister />} />
           <Route path="/login" element={<CitzenLogin />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/points-shop" element={<Dashboard showPointsShop={true} />} />
           <Route path="/report-route" element={<RouteReport />} />
-          <Route path="/" element={<CitzenLogin />} />
+          <Route path="/" element={<Home />} />
           <Route path="/staff-dashboard" element={<StaffDashboard  />} />
         </Routes>
       </Router>

@@ -13,6 +13,7 @@ function CitizenRegister() {
     last_name: "",
     email: "",
     password: "",
+    
   });
   const navigate = useNavigate(); 
   
@@ -20,7 +21,7 @@ function CitizenRegister() {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Form Data:', formData);
@@ -82,6 +83,35 @@ function CitizenRegister() {
           <label htmlFor="password">Password:</label>
           <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required />
         </div>
+        <div>
+            <label>Transport Preferences:</label>
+            <div className="checkbox-group">
+              <label>
+                <input
+                  type="checkbox"
+                  value="bus"
+                  
+                />
+                Bus
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  value="metro"
+                  
+                />
+                Metro
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  value="tram"
+                  
+                />
+                Tram
+              </label>
+            </div>
+          </div>
         <button type="submit">Register</button>
         <p>Already have an account? <a href="/login">Login here</a></p>
       </form>
