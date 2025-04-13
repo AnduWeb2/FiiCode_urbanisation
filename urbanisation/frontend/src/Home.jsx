@@ -55,7 +55,7 @@ const Home = () => {
       <section className="impact-section">
         <h2 className="section-title">Impactul nostru</h2>
         <div className="impact-grid">
-          <div>📍 12 orașe integrate</div>
+          <div>📍 1 oraș integrat</div>
           <div>🧍‍♀️ 30.000+ utilizatori activi</div>
           <div>🍃 21 tone CO₂ economisite</div>
           <div>🚲 1.500.000 km sustenabili</div>

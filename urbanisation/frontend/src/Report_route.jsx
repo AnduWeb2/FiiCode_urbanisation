@@ -65,7 +65,7 @@ function RouteReport() {
       <header>
         <nav className="navbar-links">
           <button className="navbar-button" onClick={handleHomeClick}> Go back Home</button>
-          <button className="navbar-button-logout">Logout</button>
+          <button className="navbar-button-logout" onClick={handleLogout}>Logout</button>
         </nav>
       </header>
       <main>
