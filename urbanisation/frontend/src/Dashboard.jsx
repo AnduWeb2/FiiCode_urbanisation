@@ -136,6 +136,7 @@ function Dashboard({showPointsShop}) {
                         Points: <strong>{userPoints}</strong>
                     </div>
                 </nav>
+                <img src="/media/UrbanFlow.png" className="points-logo"  />
                 <h1>Dashboard</h1>
                 <p>Welcome, {username}!</p>
                 
