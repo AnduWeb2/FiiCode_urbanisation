@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'files',
     'user',
     'routes',
+    'raports',
 ]
 
 MIDDLEWARE = [

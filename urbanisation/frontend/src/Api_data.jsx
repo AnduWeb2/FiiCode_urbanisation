@@ -34,7 +34,8 @@ export const routes = [
         "route_long_name": "Copou - Tudor Vladimirescu - Potiers - CUG I",
         "route_color": "#a2238e",
         "route_type": 3,
-        "route_desc": "Copou - Tudor Vladimirescu - Potiers - CUG I"
+        "route_desc": "Copou - Tudor Vladimirescu - Potiers - CUG I",
+        "eco_friendly": true
     },
     {
         "agency_id": "1",
@@ -43,7 +44,8 @@ export const routes = [
         "route_long_name": "Bucium - Tudor Vladimirescu - Targu Cucu - Pacurari",
         "route_color": "#a2238e",
         "route_type": 3,
-        "route_desc": "Bucium - Tudor Vladimirescu - Targu Cucu - Pacurari"
+        "route_desc": "Bucium - Tudor Vladimirescu - Targu Cucu - Pacurari",
+        "eco_friendly": true
     },
     {
         "agency_id": "1",
@@ -70,7 +72,8 @@ export const routes = [
         "route_long_name": "Piata Independentei - Podu Ros - Ciurea",
         "route_color": "#a2238e",
         "route_type": 3,
-        "route_desc": "Piata Independentei - Podu Ros - Ciurea"
+        "route_desc": "Piata Independentei - Podu Ros - Ciurea",
+        "eco_friendly": true
     },
     {
         "agency_id": "1",
@@ -106,7 +109,8 @@ export const routes = [
         "route_long_name": "CUG I - Poitiers - T. Vladimirescu - Pacurari - MALL MOLDOVA",
         "route_color": "#a2238e",
         "route_type": 3,
-        "route_desc": "CUG I - Poitiers - T. Vladimirescu - Pacurari - MALL MOLDOVA"
+        "route_desc": "CUG I - Poitiers - T. Vladimirescu - Pacurari - MALL MOLDOVA",
+        "eco_friendly": true
     },
     {
         "agency_id": "1",
@@ -115,7 +119,8 @@ export const routes = [
         "route_long_name": "Dacia - N. Iorga - Baza 3 - Tatarasi Nord",
         "route_color": "#f05b72",
         "route_type": 0,
-        "route_desc": "Dacia - N. Iorga - Baza 3 - Tatarasi Nord"
+        "route_desc": "Dacia - N. Iorga - Baza 3 - Tatarasi Nord",
+        "eco_friendly": true
     },
     {
         "agency_id": "1",
@@ -133,7 +138,8 @@ export const routes = [
         "route_long_name": "Copou - Targu Cucu - Podu Ros - Tehnopolis",
         "route_color": "#4ea391",
         "route_type": 0,
-        "route_desc": "Copou - Targu Cucu - Podu Ros - Tehnopolis"
+        "route_desc": "Copou - Targu Cucu - Podu Ros - Tehnopolis",
+        "eco_friendly": true
     },
     {
         "agency_id": "1",
@@ -169,7 +175,8 @@ export const routes = [
         "route_long_name": "Targu Cucu - Complex Roua",
         "route_color": "#a2238e",
         "route_type": 3,
-        "route_desc": "Targu Cucu - Ciric"
+        "route_desc": "Targu Cucu - Ciric",
+        "eco_friendly": true
     },
     {
         "agency_id": "1",
@@ -187,7 +194,8 @@ export const routes = [
         "route_long_name": "Dacia - Gara - Copou - Breazu",
         "route_color": "#a2238e",
         "route_type": 3,
-        "route_desc": "Dacia - Gara - Copou - Breazu"
+        "route_desc": "Dacia - Gara - Copou - Breazu",
+        "eco_friendly": true
     },
     {
         "agency_id": "1",
@@ -205,7 +213,8 @@ export const routes = [
         "route_long_name": "Canta - Gara - Podu Ros - CUG I",
         "route_color": "#b00a87",
         "route_type": 3,
-        "route_desc": "Canta - Gara - Podu Ros - CUG I"
+        "route_desc": "Canta - Gara - Podu Ros - CUG I",
+        "eco_friendly": true
     },
     {
         "agency_id": "1",
@@ -223,7 +232,8 @@ export const routes = [
         "route_long_name": "Tatarasi Nord - Baza 3 - Poitiers - Tehnopolis",
         "route_color": "#203d4d",
         "route_type": 3,
-        "route_desc": "Tatarasi Nord - Baza 3 - Poitiers - Tehnopolis"
+        "route_desc": "Tatarasi Nord - Baza 3 - Poitiers - Tehnopolis",
+        "eco_friendly": true
     },
     {
         "agency_id": "1",
@@ -331,7 +341,8 @@ export const routes = [
         "route_long_name": "Rond Tutora - Tomesti - Tutora - Opriseni",
         "route_color": "#000",
         "route_type": 3,
-        "route_desc": "Rond Tutora - Tomesti - Tutora - Opriseni"
+        "route_desc": "Rond Tutora - Tomesti - Tutora - Opriseni",
+        "eco_friendly": true
     },
     {
         "agency_id": "1",
@@ -439,7 +450,8 @@ export const routes = [
         "route_long_name": "C.U.G. I - Ciurbesti",
         "route_color": "#000",
         "route_type": 3,
-        "route_desc": "C.U.G. I - Ciurbesti"
+        "route_desc": "C.U.G. I - Ciurbesti",
+        "eco_friendly": true
     },
     {
         "agency_id": "1",
@@ -475,7 +487,8 @@ export const routes = [
         "route_long_name": "7*",
         "route_color": "#000",
         "route_type": 0,
-        "route_desc": ""
+        "route_desc": "",
+        "eco_friendly": true
     },
     {
         "agency_id": "1",
@@ -547,7 +560,8 @@ export const routes = [
         "route_long_name": "Podu Ros - Miroslava - Proselnici",
         "route_color": "#000",
         "route_type": 3,
-        "route_desc": ""
+        "route_desc": "",
+        "eco_friendly": true
     },
     {
         "agency_id": "1",
@@ -583,7 +597,8 @@ export const routes = [
         "route_long_name": "CS9",
         "route_color": "#000",
         "route_type": 3,
-        "route_desc": "Podu Ros - Tehnopolis"
+        "route_desc": "Podu Ros - Tehnopolis",
+        "eco_friendly": true
     }
 ]
 export const trips = [

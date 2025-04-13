@@ -27,7 +27,8 @@ const Routing = ({ points, color }) => {
             addWaypoints: false,
             draggableWaypoints: false,
             fitSelectedRoutes: true,
-            createMarker: () => null, 
+            createMarker: () => null
+            
         }).addTo(map);
 
         return () => {

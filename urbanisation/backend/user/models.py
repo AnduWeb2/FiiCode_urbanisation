@@ -20,7 +20,7 @@ class Citzen(models.Model):
     password = models.CharField(max_length=128)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
-
+    points = models.IntegerField(default=0)
     def __str__(self):
         return self.username
 

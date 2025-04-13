@@ -12,7 +12,7 @@ function Dashboard() {
     const [username, setUsername] = useState("");
     const [showMap, setShowMap] = useState(true);
     const [favoriteRoutes, setFavoriteRoutes] = useState([]);
-
+    const [userPoints, setUserPoints] = useState(0);
 
     useEffect(() => {
         const token = localStorage.getItem("access_token");
@@ -20,6 +20,7 @@ function Dashboard() {
             navigate("/login");
         } else {
             setUsername(localStorage.getItem("username"));
+            fetchUserPoints();
         }
     }, [navigate]);
     const handleLogout = () => {
@@ -81,6 +82,23 @@ function Dashboard() {
             console.error("Error deleting favorite route:", error);
         }
     }
+    const fetchUserPoints = async () => {
+        const token = localStorage.getItem("access_token");
+        try {
+            const response = await axios.get("http://localhost:8000/api/user/get_points/",{
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            if(response.status === 200){
+                setUserPoints(response.data.points);
+            }
+        }catch(error) {
+            console.error("Error fetching user points", error);
+            if(error.response && error.response.status === 401)
+                navigate("/login");
+        }
+    };
     const handleHomeClick = () => {
         navigate("/dashboard");
         setShowMap(true);
@@ -101,8 +119,8 @@ function Dashboard() {
                     <button className="navbar-button-favRoutes" onClick={handleFavoriteRoutesClick}>
                         Favorite Routes
                     </button>
-                    <button className="navbar-button">
-                        Profile Settings
+                    <button className="navbar-button-shop">
+                        Points Shop
                     </button>
                     <button className="navbar-button-logout" onClick={handleRouteReportClick}>
                         Report Route
@@ -110,6 +128,9 @@ function Dashboard() {
                     <button onClick={handleLogout} className="navbar-button-logout">
                         Logout
                     </button>
+                    <div className="user-points">
+                        Points: <strong>{userPoints}</strong>
+                    </div>
                 </nav>
                 <h1>Dashboard</h1>
                 <p>Welcome, {username}!</p>
@@ -117,7 +138,7 @@ function Dashboard() {
             </header>
             <main>
                 {showMap ? (
-                    <Map />
+                    <Map fetchUserPoints={fetchUserPoints} />
                 ) : (
                     <div className="favorite-routes">
                         <h2>Favorite Routes:</h2>

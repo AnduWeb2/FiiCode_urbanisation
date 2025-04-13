@@ -130,7 +130,7 @@ a {
   gap: 15px; /* Spațiu între butoane */
 }
 
-.navbar-button, .navbar-button-logout, .navbar-button-favRoutes {
+.navbar-button, .navbar-button-logout, .navbar-button-favRoutes, .navbar-button-shop {
   padding: 8px 16px;
   background-color: #64A8D3;
   color: white;
@@ -143,14 +143,19 @@ a {
 }
 
 .navbar-button:hover {
-  background: linear-gradient(135deg, #2575fc, #6a11cb); /* Inversare gradient */
-  transform: scale(1.05); /* Efect de hover */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Umbră mai pronunțată */
+  background: linear-gradient(135deg, #2575fc, #6a11cb); 
+  transform: scale(1.05); 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
 }
 .navbar-button-logout:hover {
-  background-color: #FF4C4C; /* Fundal roșu pentru butonul de logout */
-  transform: scale(1.05); /* Efect de hover */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Umbră mai pronunțată */
+  background-color: #FF4C4C; 
+  transform: scale(1.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
+}
+.navbar-button-shop:hover {
+  background-color: #4caf50; 
+  transform: scale(1.05); 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
 }
 .search-bar-container {
   position: relative;
@@ -298,9 +303,12 @@ body, html {
   margin: 0;
   padding: 0;
   overflow-x: hidden; /* Ascunde scroll-ul orizontal */
+  height: 100%;
 }
 .report-route {
   background: linear-gradient(to bottom, #2E55B6, #1E3C72); /* Fundal gradient */
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   color: white;
   height: 100vh;
   display: flex;
@@ -426,4 +434,173 @@ body, html {
 .report-route button[type="submit"]:hover {
   background-color: #1E3C72;
   transform: scale(1.05);
+}
+
+.staff-header {
+  background-color: #2E55B6;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  margin-top: 20px;
+
+}
+.staff-header nav{
+  position: absolute; /* Poziționează navbar-ul absolut */
+  top: 10px;
+  left: 0;
+  width: 100%; /* Ocupă întreaga lățime a paginii */
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: flex-start; /* Aliniază elementele la stânga */
+  align-items: center;
+  gap: 20px; /* Spațiu între elemente */
+  z-index: 1000; /* Asigură-te că navbar-ul este deasupra altor elemente */
+}
+.staff-header h1 {
+  font-size: 24px;
+  margin: 0px;
+  color: white;
+}
+.staff-dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+.staff-dashboard main {
+  flex: 1; /* Ocupă spațiul rămas */
+  display: flex;
+  justify-content: left;
+  align-items: left;
+  flex-direction: column;
+  gap: 0px; /* Spațiu între elemente */
+  padding: 20px;
+  margin-top: 40px; /* Adaugă un spațiu deasupra pentru a evita suprapunerea cu header-ul */
+}
+.report-list {
+  list-style: none;
+  padding: 0;
+}
+
+.report-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f9f9f9;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.report-item p {
+  margin: 0;
+  font-size: 16px;
+  color: black;
+}
+
+.view-details-button {
+  background-color: #2E55B6;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.view-details-button:hover {
+  background-color: #1E3C72;
+}
+.report-list {
+  list-style: none;
+  padding: 0;
+}
+
+.report-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f9f9f9;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.report-item p {
+  margin: 0;
+  font-size: 16px;
+}
+
+.view-details-button, .back-button {
+  background-color: #2E55B6;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.view-details-button:hover, .back-button:hover {
+  background-color: #1E3C72;
+}
+.close-report {
+  margin-top: 20px;
+}
+
+.close-report textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-bottom: 10px;
+  resize: none;
+}
+
+.close-button {
+  background-color: #FF4C4C;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.close-button:hover {
+  background-color: #D32F2F;
+}
+.search-result-item.eco-friendly {
+  background-color: #e6ffe6; /* Fundal verde deschis pentru rutele eco-friendly */
+  border-left: 5px solid #4caf50; /* Linie verde pe marginea stângă */
+}
+
+.search-result-item.eco-friendly:hover {
+  background-color: #ccffcc; /* Fundal mai intens la hover */
+}
+
+.eco-friendly-indicator {
+  margin-left: 10px;
+  color: #4caf50; /* Verde pentru indicator */
+  font-weight: bold;
+}
+.user-points {
+  position: fixed; 
+  top: 20px; 
+  right: 20px; 
+  background-color: #f0f0f0; 
+  padding: 10px 15px; 
+  border-radius: 8px; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  font-size: 16px; 
+  font-weight: bold; 
+  color: #4caf50; 
+  z-index: 1000; 
 }

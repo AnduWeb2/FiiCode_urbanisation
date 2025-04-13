@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {toast} from 'react-toastify';
 
 
-function Map() {
+function Map({fetchUserPoints}) {
     const mapRef = useRef(null);
     const searchBarRef = useRef(null);
     const [searchTerm, setSearchTerm] = useState("");
@@ -36,6 +36,7 @@ function Map() {
             route.route_long_name.toLowerCase().includes(term)
         );
         setFilteredRoutes(filtered);
+        console.log("Filtered Routes:", filtered); 
         setShowResults(true);
     };
 
@@ -91,7 +92,7 @@ function Map() {
     
     
 
-    const handleRouteClick = (routeID) => {
+    const handleRouteClick = async (routeID) => {
         if (!routeID) {
             console.warn("Invalid route ID:", routeID);
             return;
@@ -104,6 +105,31 @@ function Map() {
         setSearchTerm(route1.route_long_name);
         localStorage.setItem("lastSelectedRouteName", route1.route_long_name);
         localStorage.setItem("lastSelectedRouteId", routeID);
+
+        if(route1.eco_friendly)
+        {
+            try {
+                const token = localStorage.getItem("access_token");
+                const response = await axios.post(
+                    "http://localhost:8000/api/user/add_points/",
+                    { points: 10 }, // Trimite punctele către backend
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+                if (response.status === 200) {
+                    toast.success("You earned 10 points for selecting an eco-friendly route!");
+                    fetchUserPoints();
+                } else {
+                    toast.error("Failed to add points.");
+                }
+            } catch (error) {
+                console.error("Error adding points:", error);
+                toast.error("Error adding points.");
+            }
+        }
         const trip = trips.find((trip) => trip.route_id === routeID && trip.direction_id === 0);
         let stopSeq = 0;
         let stopIDs = [];
@@ -195,15 +221,29 @@ function Map() {
                 />
                 {showResults  && (
                     <div className="search-results">
-                        <ul>
-                            {filteredRoutes.map((route, index) => (
-                                <li key={index} className="search-result-item" onClick={() => handleRouteClick(route.route_id)}>
-                                    <span className="route-number" style={{ backgroundColor: route.route_color }}>{route.route_id}</span>
-                                    <span className="route-name">{route.route_long_name}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                    <ul>
+                        {filteredRoutes.map((route, index) => (
+                            <li
+                                key={index}
+                                className={`search-result-item ${route.eco_friendly ? "eco-friendly" : ""}`}
+                                onClick={() => handleRouteClick(route.route_id)}
+                            >
+                                <span
+                                    className="route-number"
+                                    style={{ backgroundColor: route.route_color }}
+                                >
+                                    {route.route_id}
+                                </span>
+                                <span className="route-name">
+                                    {route.route_long_name}
+                                    {route.eco_friendly && (
+                                        <span className="eco-friendly-indicator">🌱</span>
+                                    )}
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
                 )}
             </div>
             <div className="route-info">

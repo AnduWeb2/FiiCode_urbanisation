@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 
 function StaffLogin() {
-    
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: "",
         password: "",
@@ -27,7 +27,8 @@ function StaffLogin() {
             toast.success('Login successful!'); 
             console.log('Login Response:', response.data);
             localStorage.setItem('access_token', response.data.token);
-            
+            localStorage.setItem('staff-username', response.data.username);
+            navigate('/staff-dashboard'); // Redirect to dashboard or home page after successful login
             // Redirect to dashboard or home page after successful login
         } catch (error) {
             if(error.response.status == 412) {
