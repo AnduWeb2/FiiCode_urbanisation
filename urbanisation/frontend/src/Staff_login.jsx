@@ -47,6 +47,7 @@ function StaffLogin() {
         <div className="login-form">
             <h2>Staff Login</h2>
             <form onSubmit={handleSubmit}>
+                <img src="/media/UrbanFlow.png"  className="logo-login"/>
                 <div>
                     <label htmlFor="username">Username:</label>
                     <input type="username" name="username" value={formData.username} onChange={handleChange} required />

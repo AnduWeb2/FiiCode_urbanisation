@@ -63,6 +63,7 @@ function CitizenRegister() {
       <h2>Citizen Registration</h2>
       
       <form onSubmit={handleSubmit} >
+        <img src="/media/UrbanFlow.png"  className="logo-login"/>
         <div>
             <label htmlFor = "first_name">First Name:</label>
             <input type="text" id="first_name" name="first_name" value={formData.first_name} onChange={handleChange} required />
@@ -116,7 +117,7 @@ function CitizenRegister() {
         <p>Already have an account? <a href="/login">Login here</a></p>
       </form>
     </div>
-    <p className="staff-redirect">Are you a staff member? Click here</p>
+    <p className="staff-redirect">Are you a staff member? <a href="staff-login">Click here</a></p>
     </>
     );
   };

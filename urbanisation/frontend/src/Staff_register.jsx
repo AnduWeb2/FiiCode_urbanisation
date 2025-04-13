@@ -54,6 +54,7 @@ function StaffRegister() {
       <h2>Staff Registration</h2>
       
       <form onSubmit={handleSubmit} >
+        <img src="/media/UrbanFlow.png"  className="logo-login"/>
         <div>
             <label htmlFor = "first_name">First Name:</label>
             <input type="text" id="first_name" name="first_name" value={formData.first_name} onChange={handleChange} required />
