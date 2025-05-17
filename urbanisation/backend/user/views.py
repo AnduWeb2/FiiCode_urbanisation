@@ -6,6 +6,12 @@ from .models import StaffUser, Citzen, StaffUserToken, CitzenToken, CustomUser
 from files.views import getFile
 from files.models import File 
 from django.contrib.auth.hashers import make_password, verify_password, check_password
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import MyTokenObtainPairSerializer
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
 
 @csrf_exempt
@@ -61,14 +67,14 @@ def CitzenRegister(request):
     if request.method == 'POST':
         data = JSONParser().parse(request)
         try:
-            user = Citzen.objects.create(
+            custom_user = CustomUser.objects.create(
                 username=data['username'],
                 email=data['email'],
                 password=make_password(data['password']),
                 first_name=data['first_name'],
                 last_name=data['last_name']
             )
-            user.save()
+            citizen = Citzen.objects.create(user=custom_user)
             return JsonResponse({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -79,11 +85,10 @@ def CitzenLogin(request):
     if request.method == 'POST':
         data = JSONParser().parse(request)
         try:
-            user = Citzen.objects.get(username=data['username'])
-            if check_password(data['password'], user.password):
-                token = CitzenToken.objects.create(user=user, token=make_password(user.username))
-                token.save()
-                return JsonResponse({"token": token.token, "username": user.username}, status=status.HTTP_200_OK)
+            user = Citzen.objects.get(user__username=data['username'])
+            if check_password(data['password'], user.user.password):
+                
+                return JsonResponse({"username": user.user.username}, status=status.HTTP_200_OK)
             else:
                 return JsonResponse({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
         except Citzen.DoesNotExist:

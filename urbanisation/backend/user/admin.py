@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Citzen, StaffUser, StaffUserToken, CitzenToken,StaffUser, CustomUser
+from django.contrib.auth.admin import UserAdmin
+from .models import Citzen, StaffUser, StaffUserToken, CitzenToken, StaffUser, CustomUser
 
 # Register your models here.
 class CitzenAdmin(admin.ModelAdmin):
@@ -23,4 +24,24 @@ class CitzenAdmin(admin.ModelAdmin):
     get_last_name.admin_order_field = 'user__last_name'
 admin.site.register(Citzen, CitzenAdmin)
 admin.site.register(StaffUser)
-admin.site.register(CustomUser)
+
+
+class CustomUserAdmin(UserAdmin):
+    model = CustomUser
+    list_display = ('username', 'email', 'is_staff', 'is_active')
+    list_filter = ('is_staff',)
+    search_fields = ('username', 'email')
+    ordering = ('username',)
+    fieldsets = (
+        (None, {'fields': ('username', 'email', 'password')}),
+        ('Personal info', {'fields': ('first_name', 'last_name')}),
+        ('Permissions', {'fields': ('is_staff', 'is_active', 'is_superuser', 'groups', 'user_permissions')}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username', 'email', 'password1', 'password2', 'is_staff', 'is_active')}
+        ),
+    )
+
+admin.site.register(CustomUser, CustomUserAdmin)
