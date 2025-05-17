@@ -2,7 +2,7 @@ from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
-from .models import StaffUser, Citzen, StaffUserToken, CitzenToken
+from .models import StaffUser, Citzen, StaffUserToken, CitzenToken, CustomUser
 from files.views import getFile
 from files.models import File 
 from django.contrib.auth.hashers import make_password, verify_password, check_password
@@ -15,15 +15,19 @@ def registerStaffUser(request):
         try:
             print(data)
             document = File.objects.get(id=data['document_id'])
-            user = StaffUser.objects.create(
+            custom_user = CustomUser.objects.create(
                 username=data['username'],
                 email=data['email'],
                 password=make_password(data['password']),
                 first_name=data['first_name'],
                 last_name=data['last_name'],
-                document=document,
+                is_staff=True
             )
-            user.save()
+            staff_user = StaffUser.objects.create(
+                user=custom_user,
+                is_valid=False,
+                document=document
+            )
             return JsonResponse({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -37,14 +41,14 @@ def loginStaffUser(request):
     if request.method == 'POST':
         data = JSONParser().parse(request)
         try:
-            user = StaffUser.objects.get(username=data['username'])
+            user = StaffUser.objects.get(user__username=data['username'])
             if user.is_valid == False:
                 return JsonResponse({"error": "User is not valid"}, status=status.HTTP_412_PRECONDITION_FAILED)
-            if verify_password(data['password'], user.password):
-                token = StaffUserToken.objects.create(user=user, token=make_password(user.username))
-                token.save()
-                return JsonResponse({"token": token.token,
-                                     "username": user.username
+            if verify_password(data['password'], user.user.password):
+                #token = StaffUserToken.objects.create(user=user, token=make_password(user.username))
+                #token.save()
+                return JsonResponse({#"token": token.token,
+                                     "username": user.user.username
                 }, status=status.HTTP_200_OK)
             else:
                 return JsonResponse({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)

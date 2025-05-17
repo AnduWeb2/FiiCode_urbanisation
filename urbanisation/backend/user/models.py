@@ -9,16 +9,12 @@ class CustomUser(AbstractUser):
     password = models.CharField(max_length=128)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
-
+    is_staff = models.BooleanField(default=False)
 
 
 
 class StaffUser(models.Model):
-    username = models.CharField(max_length=150, unique=True)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=128)
-    first_name = models.CharField(max_length=30, blank=True)
-    last_name = models.CharField(max_length=30, blank=True)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     is_valid = models.BooleanField(default=False)
     document = models.ForeignKey(File, on_delete=models.CASCADE)
     
@@ -26,14 +22,10 @@ class StaffUser(models.Model):
         return self.username
 
 class Citzen(models.Model):
-    username = models.CharField(max_length=150, unique=True)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=128)
-    first_name = models.CharField(max_length=30, blank=True)
-    last_name = models.CharField(max_length=30, blank=True)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     points = models.IntegerField(default=0)
     def __str__(self):
-        return self.username
+        return self.user.username
 
 class StaffUserToken(models.Model):
     user = models.ForeignKey(StaffUser, on_delete=models.CASCADE)
