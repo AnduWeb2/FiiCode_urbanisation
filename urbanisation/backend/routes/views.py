@@ -10,9 +10,7 @@ from .models import FavoriteRoute
 @csrf_exempt
 def addFavorite(request):
     if request.method == 'POST':
-        # Handle the POST request to add a favorite item
-        # Extract data from the request and process it
-        # For example, you might want to save the favorite item to the database
+        
         try:
             data = JSONParser().parse(request)
             print(data) 
@@ -31,7 +29,7 @@ def addFavorite(request):
         return JsonResponse({"error": "Invalid request method"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     
-        # Handle other request methods if needed (e.g., GET)
+        
 
 def getFavorites(request):
     if request.method == 'GET':
