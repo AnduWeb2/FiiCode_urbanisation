@@ -8,6 +8,8 @@ import L from "leaflet";
 import axios from "axios";
 import 'react-toastify/dist/ReactToastify.css';
 import {toast} from 'react-toastify';
+import { useNavigate } from "react-router-dom";
+import { refreshAccessToken } from "./utils";
 
 
 function Map({fetchUserPoints}) {
@@ -28,6 +30,8 @@ function Map({fetchUserPoints}) {
         route_name: "",
         token: "",
     });
+    const navigate = useNavigate();
+
 
     const handleSearch = (e) => {
         const term = e.target.value.toLowerCase();
@@ -108,8 +112,8 @@ function Map({fetchUserPoints}) {
 
         if(route1.eco_friendly)
         {
+            const token = localStorage.getItem("access_token");
             try {
-                const token = localStorage.getItem("access_token");
                 const response = await axios.post(
                     "http://localhost:8000/api/user/add_points/",
                     { points: 10 }, // Trimite punctele către backend
@@ -120,16 +124,39 @@ function Map({fetchUserPoints}) {
                     }
                 );
                 if (response.status === 200) {
-                    toast.success("You earned 10 points for selecting an eco-friendly route!");
+                    toast.success("Points added successfully!");
                     fetchUserPoints();
-                } else {
-                    toast.error("Failed to add points.");
                 }
-            } catch (error) {
-                console.error("Error adding points:", error);
-                toast.error("Error adding points.");
+
+            }
+            catch (error) {
+                if (error.response && error.response.status === 401) {
+                    let newtoken = await refreshAccessToken();
+                    if (newtoken) {
+                        try {
+                            const retryresponse = await axios.post(
+                                "http://localhost:8000/api/user/add_points/",
+                                { points: 10 }, // Trimite punctele către backend
+                                {
+                                    headers: {
+                                        Authorization: `Bearer ${newtoken}`,
+                                    },
+                                }
+                            );
+                            if (retryresponse.status === 200) {
+                                fetchUserPoints();
+                                toast.success("Points added successfully!");
+                            }
+                        } catch (error) {
+                            console.error("Error adding points:", error);
+                        }
+                    }
+                    else {
+                        navigate("/login");
+                    }
             }
         }
+    }
         const trip = trips.find((trip) => trip.route_id === routeID && trip.direction_id === 0);
         let stopSeq = 0;
         let stopIDs = [];

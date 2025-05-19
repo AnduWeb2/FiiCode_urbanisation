@@ -12,6 +12,7 @@ function CitizenLogin() {
         username: "",
         password: "",
     });
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -25,10 +26,17 @@ function CitizenLogin() {
             const response = await axios.post('http://localhost:8000/api/user/citizen/login/', formData);
             toast.success('Login successful!'); 
             console.log('Login Response:', response.data);
-            localStorage.setItem('access_token', response.data.token);
+            const tokenresponse = await axios.post('http://localhost:8000/api/user/token/', {
+                username: formData.username,
+                password: formData.password
+            });
+            console.log("Access token response:", tokenresponse.data.access);
+            console.log("Refresh token response:", tokenresponse.data.refresh);
+            localStorage.setItem('access_token', tokenresponse.data.access);
+            localStorage.setItem('refresh_token', tokenresponse.data.refresh);
             localStorage.setItem('username', response.data.username); 
-            navigate('/dashboard'); // Redirect to dashboard or home page after successful login
-            // Redirect to dashboard or home page after successful login
+            navigate('/dashboard'); 
+            
         } catch (error) {
             if (error.response && error.response.status === 401 || error.response.status === 404) {
                 toast.error('Invalid username or password. Please try again.');

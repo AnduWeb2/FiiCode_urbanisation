@@ -6,6 +6,7 @@ import Map from "./Map";
 import axios from "axios";
 import { toast } from "react-toastify";
 import PointsShop from "./PointsShop";
+import { refreshAccessToken } from "./utils";
 
 
 function Dashboard({showPointsShop}) {
@@ -28,6 +29,7 @@ function Dashboard({showPointsShop}) {
     }, [navigate]);
     const handleLogout = () => {
         localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
         localStorage.removeItem("username");
         localStorage.removeItem("points");
         navigate("/login");
@@ -86,7 +88,7 @@ function Dashboard({showPointsShop}) {
             console.error("Error deleting favorite route:", error);
         }
     }
-    const fetchUserPoints = async () => {
+    /*const fetchUserPoints = async () => {
         const token = localStorage.getItem("access_token");
         try {
             const response = await axios.get("http://localhost:8000/api/user/get_points/",{
@@ -102,7 +104,49 @@ function Dashboard({showPointsShop}) {
             if(error.response && error.response.status === 401)
                 navigate("/login");
         }
-    };
+    };*/
+    const fetchUserPoints = async () => {
+    const token = localStorage.getItem("access_token");
+
+    try {
+        const response = await axios.get("http://localhost:8000/api/user/get_points/", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        
+        setUserPoints(response.data.points);
+
+    } catch (error) {
+        if (error.response && error.response.status === 401) {
+            
+            const newToken = await refreshAccessToken();
+
+            if (newToken) {
+                try {
+                    const retryResponse = await axios.get("http://localhost:8000/api/user/get_points/", {
+                        headers: {
+                            Authorization: `Bearer ${newToken}`,
+                        },
+                    });
+
+                    if (retryResponse.status === 200) {
+                        setUserPoints(retryResponse.data.points);
+                    }
+                } catch (retryError) {
+                    console.error("Retry after refresh failed:", retryError);
+                    navigate("/login");
+                }
+            } else {
+                navigate("/login");
+            }
+        } else {
+            console.error("Error fetching user points", error);
+        }
+    }
+};
+
     const handleHomeClick = () => {
         navigate("/dashboard");
         setShowMap(true);
