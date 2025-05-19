@@ -8,6 +8,8 @@ from files.models import File
 from django.contrib.auth.hashers import make_password, verify_password, check_password
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import MyTokenObtainPairSerializer
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -109,12 +111,21 @@ def add_points(request):
                 return JsonResponse({"error": "Token is required"}, status=400)
             if token.startswith("Bearer "):
                 token = token[7:]
-            user = CitzenToken.objects.get(token=token).user
-            if not user:
+            try:
+                access_token = AccessToken(token)
+                username = access_token['username']
+                try:
+                    user = Citzen.objects.get(user__username=username)
+                except Citzen.DoesNotExist:
+                    return JsonResponse({"error": "User does not exist"}, status=404)
+                user = Citzen.objects.get(user__username=user)
+                user.points += points_to_add
+                user.save()
+                print(f"Points: {user.points}")
+                return JsonResponse({"points": user.points}, status=200)
+            except (TokenError, InvalidToken):
                 return JsonResponse({"error": "Invalid token"}, status=401)
-            user.points += points_to_add
-            user.save()
-            return JsonResponse({"message": "Points added successfully"}, status=200)
+            
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
     else:
@@ -130,10 +141,27 @@ def getPoints(request):
                 return JsonResponse({"error": "Token is required"}, status=400)
             if token.startswith("Bearer "):
                 token = token[7:]
-            user = CitzenToken.objects.get(token=token).user
-            if not user:
+            try:
+                # Decode the token to get the user ID
+                access_token = AccessToken(token)
+                username = access_token['username']
+                print(f"Username: {username}")
+                
+                # Fetch the user from the database
+                try:
+                    user = Citzen.objects.get(user__username=username)
+                    print(f"User: {user}")
+                except Citzen.DoesNotExist:
+                    return JsonResponse({"error": "User does not exist"}, status=404)
+
+                
+                points = Citzen.objects.get(user__username=user).points
+                print(f"Points: {points}")
+
+                return JsonResponse({"points": points}, status=200)
+            except (TokenError, InvalidToken):
                 return JsonResponse({"error": "Invalid token"}, status=401)
-            return JsonResponse({"points": user.points}, status=200)
+
         except Exception as e:
             print(f"Error in getPoints: {e}")
             return JsonResponse({"error": str(e)}, status=500)
