@@ -141,3 +141,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 API_URL = os.getenv("API_URL")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://fiicode-urbanisation.onrender.com',  
+    'https://urbanisationol.vercel.app/',     
+]
