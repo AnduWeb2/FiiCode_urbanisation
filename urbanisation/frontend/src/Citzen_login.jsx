@@ -46,6 +46,9 @@ function CitizenLogin() {
             console.error('Login Error:', error.response?.data || error.message);
         }
     }
+    const handleaccountexists = () => {
+        navigate('/register');
+    }
     return (
         <>
         
@@ -64,7 +67,7 @@ function CitizenLogin() {
                     <input type="password" name="password" value={formData.password} onChange={handleChange} required />
                 </div>
                 <button type="submit">Login</button>
-                <p>Don't have an account? <a href="/register">Register here</a></p>
+                <p>Don't have an account? <a onClick={handleaccountexists}>Register here</a></p>
             </form>
         </div>
         <p className="staff-redirect">Are you a staff member? <a href="/staff-login">Click here</a></p>
