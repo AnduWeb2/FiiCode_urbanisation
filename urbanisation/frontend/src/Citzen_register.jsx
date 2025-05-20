@@ -6,7 +6,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import './index.css';
 
 function CitizenRegister() {
-  
+  const handleaccountexists = () => {
+    navigate('/login');
+  }
   const [formData, setFormData] = useState({
     username: "",
     first_name: "",
@@ -114,7 +116,7 @@ function CitizenRegister() {
             </div>
           </div>
         <button type="submit">Register</button>
-        <p>Already have an account? <a href="/login">Login here</a></p>
+        <p>Already have an account? <a onClick={handleaccountexists}>Login here</a></p>
       </form>
     </div>
     <p className="staff-redirect">Are you a staff member? <a href="staff-login">Click here</a></p>
